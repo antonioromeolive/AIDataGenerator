@@ -1,9 +1,10 @@
-category_name
-Electronics
-Clothing
-Home & Kitchen
-Books
-Toys & Games
-Sports & Outdoors
-Beauty & Personal Care
-Groceries
+category_id,category_name
+1,Electronics
+2,Clothing
+3,Groceries
+4,Home & Kitchen
+5,Books
+6,Sports & Outdoors
+7,Toys & Games
+8,Beauty
+9,Automotive

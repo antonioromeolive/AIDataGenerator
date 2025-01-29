@@ -1,25 +1,46 @@
-store_name,city,state,country,continent,gdp,gdp_weight
-New York Store,New York,NY,USA,North America,25000000000000.0,5000000000000.0
-Los Angeles Store,Los Angeles,CA,USA,North America,25000000000000.0,5000000000000.0
-Chicago Store,Chicago,IL,USA,North America,25000000000000.0,5000000000000.0
-Houston Store,Houston,TX,USA,North America,25000000000000.0,5000000000000.0
-Phoenix Store,Phoenix,AZ,USA,North America,25000000000000.0,5000000000000.0
-Tokyo Store,Tokyo,Kanto,Japan,Asia,4900000000000.0,2450000000000.0
-Osaka Store,Osaka,Kansai,Japan,Asia,4900000000000.0,2450000000000.0
-Berlin Store,Berlin,Berlin,Germany,Europe,4200000000000.0,1400000000000.0
-Hamburg Store,Hamburg,Hamburg,Germany,Europe,4200000000000.0,1400000000000.0
-Munich Store,Munich,Bavaria,Germany,Europe,4200000000000.0,1400000000000.0
-London Store,London,England,UK,Europe,3100000000000.0,1033333333333.3334
-Manchester Store,Manchester,England,UK,Europe,3100000000000.0,1033333333333.3334
-Edinburgh Store,Edinburgh,Scotland,UK,Europe,3100000000000.0,1033333333333.3334
-Beijing Store,Beijing,Hebei,China,Asia,18000000000000.0,6000000000000.0
-Shanghai Store,Shanghai,Jiangsu,China,Asia,18000000000000.0,6000000000000.0
-Guangzhou Store,Guangzhou,Guangdong,China,Asia,18000000000000.0,6000000000000.0
-Sao Paulo Store,Sao Paulo,SP,Brazil,South America,1900000000000.0,950000000000.0
-Rio de Janeiro Store,Rio de Janeiro,RJ,Brazil,South America,1900000000000.0,950000000000.0
-Sydney Store,Sydney,NSW,Australia,Oceania,1600000000000.0,800000000000.0
-Melbourne Store,Melbourne,VIC,Australia,Oceania,1600000000000.0,800000000000.0
-Cape Town Store,Cape Town,Western Cape,South Africa,Africa,400000000000.0,200000000000.0
-Johannesburg Store,Johannesburg,Gauteng,South Africa,Africa,400000000000.0,200000000000.0
-Mumbai Store,Mumbai,Maharashtra,India,Asia,3400000000000.0,1700000000000.0
-Delhi Store,Delhi,Delhi,India,Asia,3400000000000.0,1700000000000.0
+store_name,city,state,country,continent
+Tokyo Store 1,Tokyo,Tokyo,Japan,Asia
+Tokyo Store 2,Tokyo,Tokyo,Japan,Asia
+New York Store 3,New York,NY,USA,North America
+London Store 4,London,England,UK,Europe
+London Store 5,London,England,UK,Europe
+Los Angeles Store 6,Los Angeles,CA,USA,North America
+Paris Store 7,Paris,Île-de-France,France,Europe
+Tokyo Store 8,Tokyo,Tokyo,Japan,Asia
+Beijing Store 9,Beijing,Hebei,China,Asia
+Los Angeles Store 10,Los Angeles,CA,USA,North America
+Tokyo Store 11,Tokyo,Tokyo,Japan,Asia
+Paris Store 12,Paris,Île-de-France,France,Europe
+Beijing Store 13,Beijing,Hebei,China,Asia
+New York Store 14,New York,NY,USA,North America
+Los Angeles Store 15,Los Angeles,CA,USA,North America
+Beijing Store 16,Beijing,Hebei,China,Asia
+Paris Store 17,Paris,Île-de-France,France,Europe
+Tokyo Store 18,Tokyo,Tokyo,Japan,Asia
+Los Angeles Store 19,Los Angeles,CA,USA,North America
+New York Store 20,New York,NY,USA,North America
+Beijing Store 21,Beijing,Hebei,China,Asia
+Paris Store 22,Paris,Île-de-France,France,Europe
+Los Angeles Store 23,Los Angeles,CA,USA,North America
+Tokyo Store 24,Tokyo,Tokyo,Japan,Asia
+London Store 25,London,England,UK,Europe
+Los Angeles Store 26,Los Angeles,CA,USA,North America
+Beijing Store 27,Beijing,Hebei,China,Asia
+Beijing Store 28,Beijing,Hebei,China,Asia
+London Store 29,London,England,UK,Europe
+London Store 30,London,England,UK,Europe
+Tokyo Store 31,Tokyo,Tokyo,Japan,Asia
+London Store 32,London,England,UK,Europe
+New York Store 33,New York,NY,USA,North America
+Beijing Store 34,Beijing,Hebei,China,Asia
+Los Angeles Store 35,Los Angeles,CA,USA,North America
+Tokyo Store 36,Tokyo,Tokyo,Japan,Asia
+Los Angeles Store 37,Los Angeles,CA,USA,North America
+New York Store 38,New York,NY,USA,North America
+New York Store 39,New York,NY,USA,North America
+Beijing Store 40,Beijing,Hebei,China,Asia
+Paris Store 41,Paris,Île-de-France,France,Europe
+London Store 42,London,England,UK,Europe
+Tokyo Store 43,Tokyo,Tokyo,Japan,Asia
+Beijing Store 44,Beijing,Hebei,China,Asia
+London Store 45,London,England,UK,Europe

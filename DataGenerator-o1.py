@@ -18,358 +18,513 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-#!/usr/bin/env python3
+
 import csv
 import random
 import datetime
 import math
 
-# CONFIGURATIONS
-NUM_SALES_RECORDS = 10000  # Adjust as desired.
+# -------------------------
+# CONFIGURATION
+# -------------------------
 
-# Category definitions (category name, seasonality factor, possible discount surges, etc.)
+NUM_SALES_RECORDS = 50000  # Total sales records to generate
+PROGRESS_INTERVAL = 1000   # Print progress every X records
+
+# Define a list of categories
+# (In a more realistic setup, these could be read from a DB or a more extensive data source.)
 CATEGORIES = [
-    {
-        'name': 'Electronics',
-        'seasonality_peaks': [(11, 12)],  # Example: big surge in November, December
-        'price_range': (50, 1000),  # Minimum to maximum price
-    },
-    {
-        'name': 'Clothing',
-        'seasonality_peaks': [(3, 3)],  # Spring collections in March
-        'price_range': (10, 200),
-    },
-    {
-        'name': 'Home Appliances',
-        'seasonality_peaks': [(5, 8)],  # Summer months for fans, etc.
-        'price_range': (30, 800),
-    },
-    {
-        'name': 'Books',
-        'seasonality_peaks': [(8, 9)],  # Back-to-school season
-        'price_range': (5, 80),
-    },
-    {
-        'name': 'Toys',
-        'seasonality_peaks': [(11, 12)],  # Holiday surge
-        'price_range': (5, 150),
-    },
-    {
-        'name': 'Groceries',
-        'seasonality_peaks': [(11, 11)],  # Thanksgiving in some regions
-        'price_range': (2, 20),
-    },
+    'Electronics',
+    'Home & Kitchen',
+    'Clothing',
+    'Sports & Outdoors',
+    'Beauty & Personal Care',
+    'Books',
+    'Toys & Games',
+    'Automotive',
+    'Grocery',
+    'Office Products',
 ]
 
-# Dummy categories if we want more variety, just replicate or alter data as needed.
-
-# We will create multiple products for each category.
-PRODUCTS_PER_CATEGORY = {
+# Example products for each category (top sellers vs. bottom sellers will be handled with weighting)
+# Each product has a (min_price, max_price) range and a popularity rank or weighting.
+CATEGORY_PRODUCTS = {
     'Electronics': [
-        ('Smartphone', 0.7),
-        ('Laptop', 0.6),
-        ('Headphones', 0.4),
-        ('Smart TV', 0.3),
-        ('Gaming Console', 0.35),
-        ('Tablet', 0.55),
+        ("Smartphone", (300, 1200)),
+        ("Laptop", (500, 2000)),
+        ("Wireless Headphones", (50, 300)),
+        ("Smartwatch", (80, 400)),
+        ("Gaming Console", (200, 600)),
+    ],
+    'Home & Kitchen': [
+        ("Blender", (20, 100)),
+        ("Microwave Oven", (50, 200)),
+        ("Vacuum Cleaner", (60, 300)),
+        ("Air Purifier", (50, 400)),
+        ("Coffee Maker", (20, 200)),
     ],
     'Clothing': [
-        ('T-Shirt', 0.7),
-        ('Jeans', 0.6),
-        ('Jacket', 0.4),
-        ('Sneakers', 0.65),
-        ('Dress', 0.55),
-        ('Underwear', 0.3),
+        ("T-Shirt", (5, 30)),
+        ("Jeans", (20, 80)),
+        ("Jacket", (40, 200)),
+        ("Sneakers", (30, 150)),
+        ("Dress", (25, 150)),
     ],
-    'Home Appliances': [
-        ('Refrigerator', 0.25),
-        ('Microwave', 0.4),
-        ('Blender', 0.35),
-        ('Air Conditioner', 0.25),
-        ('Dishwasher', 0.2),
+    'Sports & Outdoors': [
+        ("Running Shoes", (40, 120)),
+        ("Yoga Mat", (15, 60)),
+        ("Tennis Racket", (50, 250)),
+        ("Football", (10, 60)),
+        ("Camping Tent", (50, 300)),
+    ],
+    'Beauty & Personal Care': [
+        ("Shampoo", (5, 20)),
+        ("Facial Cleanser", (5, 30)),
+        ("Perfume", (20, 150)),
+        ("Makeup Palette", (10, 80)),
+        ("Electric Toothbrush", (30, 150)),
     ],
     'Books': [
-        ('Novel', 0.6),
-        ('Cookbook', 0.4),
-        ('Textbook', 0.3),
-        ('Children Book', 0.4),
-        ('Comic Book', 0.35),
+        ("Mystery Novel", (5, 30)),
+        ("Science Fiction Novel", (5, 35)),
+        ("Cookbook", (10, 40)),
+        ("Self-Help Book", (5, 25)),
+        ("Biography", (8, 45)),
     ],
-    'Toys': [
-        ('Action Figure', 0.5),
-        ('Board Game', 0.45),
-        ('Doll', 0.4),
-        ('Puzzle', 0.3),
-        ('Remote Car', 0.35),
+    'Toys & Games': [
+        ("Board Game", (15, 70)),
+        ("Action Figure", (10, 40)),
+        ("Doll", (8, 40)),
+        ("Building Blocks", (15, 60)),
+        ("Card Game", (5, 30)),
     ],
-    'Groceries': [
-        ('Cereal', 0.7),
-        ('Milk', 0.8),
-        ('Eggs', 0.75),
-        ('Bread', 0.9),
-        ('Butter', 0.6),
-        ('Frozen Pizza', 0.4),
+    'Automotive': [
+        ("Car Air Freshener", (2, 10)),
+        ("Motor Oil", (10, 40)),
+        ("Car Battery", (40, 120)),
+        ("Windshield Wipers", (5, 25)),
+        ("Car Tires", (50, 200)),
+    ],
+    'Grocery': [
+        ("Milk", (1, 3)),
+        ("Bread", (1, 4)),
+        ("Organic Eggs", (2, 6)),
+        ("Cheese", (2, 10)),
+        ("Cereal", (2, 6)),
+    ],
+    'Office Products': [
+        ("Printer Paper", (3, 10)),
+        ("Ballpoint Pens", (1, 8)),
+        ("Notebook", (2, 10)),
+        ("Stapler", (4, 15)),
+        ("Desk Organizer", (5, 25)),
     ],
 }
 
-# Weighted top sellers vs bottom sellers by popularity factor.
-# popularity factor is used to adjust the likelihood of a product being chosen.
-# Higher => more likely to appear.
-
-# We create store data: 45 unique store names in major cities worldwide.
-STORE_DATA = [
-    ("Tech Haven NYC", "New York", "NY", "USA", "North America"),
-    ("Urban Apparel LA", "Los Angeles", "CA", "USA", "North America"),
-    ("Gadget World CHI", "Chicago", "IL", "USA", "North America"),
-    ("Electro Zone TOR", "Toronto", "ON", "Canada", "North America"),
-    ("Metro Style PAR", "Paris", "Ile-de-France", "France", "Europe"),
-    ("Fashion Hub LON", "London", "England", "UK", "Europe"),
-    ("Digital Plaza BER", "Berlin", "Berlin", "Germany", "Europe"),
-    ("Trendy Market TOK", "Tokyo", "Tokyo", "Japan", "Asia"),
-    ("Alpha Store SYD", "Sydney", "NSW", "Australia", "Oceania"),
-    ("Global Retail DXB", "Dubai", "Dubai", "UAE", "Asia"),
-    ("Smart Mall SHA", "Shanghai", "Shanghai", "China", "Asia"),
-    ("Electronics Hub MUM", "Mumbai", "Maharashtra", "India", "Asia"),
-    ("Casual Wear SAO", "Sao Paulo", "Sao Paulo", "Brazil", "South America"),
-    ("Trendy Outlet MEX", "Mexico City", "CDMX", "Mexico", "North America"),
-    ("Chic Boutique ROM", "Rome", "Lazio", "Italy", "Europe"),
-    ("CityMart MAD", "Madrid", "Madrid", "Spain", "Europe"),
-    ("StyleStop AMS", "Amsterdam", "North Holland", "Netherlands", "Europe"),
-    ("Eco Goods STO", "Stockholm", "Stockholm", "Sweden", "Europe"),
-    ("Modern Tech SEL", "Seoul", "Seoul", "South Korea", "Asia"),
-    ("MegaMart JNB", "Johannesburg", "Gauteng", "South Africa", "Africa"),
-    ("TechnoZone HKG", "Hong Kong", "-", "Hong Kong", "Asia"),
-    ("Digital Haven SIN", "Singapore", "-", "Singapore", "Asia"),
-    ("Urban Market BUE", "Buenos Aires", "Buenos Aires", "Argentina", "South America"),
-    ("Lifestyle Store ZRH", "Zurich", "Zurich", "Switzerland", "Europe"),
-    ("Elite Shop VIE", "Vienna", "Vienna", "Austria", "Europe"),
-    ("SmartChoice GVA", "Geneva", "Geneva", "Switzerland", "Europe"),
-    ("TrendSpot MIL", "Milan", "Lombardy", "Italy", "Europe"),
-    ("ShopWorld BCN", "Barcelona", "Catalonia", "Spain", "Europe"),
-    ("Bazaar BKK", "Bangkok", "Bangkok", "Thailand", "Asia"),
-    ("Global Goods KUL", "Kuala Lumpur", "-", "Malaysia", "Asia"),
-    ("City Emporium CAI", "Cairo", "Cairo", "Egypt", "Africa"),
-    ("Pacific Retail AKL", "Auckland", "Auckland", "New Zealand", "Oceania"),
-    ("Urban Basics MTL", "Montreal", "QC", "Canada", "North America"),
-    ("Tech Central BRU", "Brussels", "Brussels", "Belgium", "Europe"),
-    ("Innova Market LUX", "Luxembourg", "-", "Luxembourg", "Europe"),
-    ("Revive Shop LIS", "Lisbon", "Lisbon", "Portugal", "Europe"),
-    ("Concept Store HEL", "Helsinki", "Uusimaa", "Finland", "Europe"),
-    ("Mega Deals OSL", "Oslo", "Oslo", "Norway", "Europe"),
-    ("Boutique BUD", "Budapest", "Central Hungary", "Hungary", "Europe"),
-    ("Tech House PRG", "Prague", "Prague", "Czech Republic", "Europe"),
-    ("CityStyle DUB", "Dublin", "Leinster", "Ireland", "Europe"),
-    ("Metro Depot WAW", "Warsaw", "Masovian", "Poland", "Europe"),
-    ("Shop Express ATH", "Athens", "Attica", "Greece", "Europe"),
-]
-
-# If we need more or fewer, adjust the above. Exactly 45 entries are included.
-
-# GDP weighting: we can define approximate GDP or an index for each country.
-GDP_INDEX = {
-    'USA': 21.4,
-    'Canada': 1.6,
-    'France': 2.6,
-    'UK': 2.8,
-    'Germany': 3.8,
-    'Japan': 5.1,
-    'Australia': 1.4,
-    'UAE': 0.42,
-    'China': 14.3,
-    'India': 2.8,
-    'Brazil': 1.8,
-    'Mexico': 1.2,
-    'Italy': 2.0,
-    'Spain': 1.4,
-    'Netherlands': 0.9,
-    'Sweden': 0.54,
-    'South Korea': 1.6,
-    'South Africa': 0.35,
-    'Hong Kong': 0.37,
-    'Singapore': 0.37,
-    'Argentina': 0.45,
-    'Switzerland': 0.71,
-    'Austria': 0.46,
-    'Thailand': 0.52,
-    'Malaysia': 0.36,
-    'Egypt': 0.3,
-    'New Zealand': 0.21,
-    'Belgium': 0.52,
-    'Luxembourg': 0.71,
-    'Portugal': 0.24,
-    'Finland': 0.27,
-    'Norway': 0.4,
-    'Hungary': 0.16,
-    'Czech Republic': 0.25,
-    'Ireland': 0.42,
-    'Poland': 0.59,
-    'Greece': 0.22,
+# Hardcode some seasonality impacts (month-based) for categories.
+# A simple approach: each category gets a dictionary mapping month -> demand multiplier
+# For instance, Electronics might be in higher demand around November/December (holiday season)
+SEASONALITY = {
+    'Electronics': {
+        11: 1.2,  # Black Friday boost
+        12: 1.4,  # Holiday season
+    },
+    'Home & Kitchen': {
+        5: 1.2,   # Summer home improvements
+        6: 1.2,
+    },
+    'Clothing': {
+        3: 1.1,   # Spring collections
+        8: 1.2,   # Back-to-school/fall
+        12: 1.3,  # Holiday/winter
+    },
+    'Sports & Outdoors': {
+        4: 1.3,   # Spring sports
+        5: 1.5,   # Summer sports
+        6: 1.5,
+        7: 1.4,
+    },
+    'Beauty & Personal Care': {
+        4: 1.1,
+        5: 1.2,
+        12: 1.3,
+    },
+    'Books': {
+        12: 1.2,  # Gifts
+    },
+    'Toys & Games': {
+        11: 1.3,
+        12: 1.6,
+    },
+    'Automotive': {
+        7: 1.3,   # Summer travel
+        8: 1.2,
+    },
+    'Grocery': {
+        11: 1.1,  # Holidays
+        12: 1.3,
+    },
+    'Office Products': {
+        8: 1.2,   # Back to school
+        9: 1.1,
+    },
 }
 
-# If a country is not in the dictionary, we can assume a default GDP index
-DEFAULT_GDP_INDEX = 0.3
-
-# Probability of a special campaign
-CAMPAIGN_PROBABILITY = 0.05
-CAMPAIGNS = [
+# Probability of a sale having a sales campaign
+# We'll incorporate random choice of campaign names
+CAMPAIGN_NAMES = [
     "10% off Black Friday",
     "Summer Sale",
-    "Holiday Deal",
-    "Weekend Special",
+    "Buy One Get One",
+    "Holiday Discount",
+    "Clearance Sale"
 ]
+CAMPAIGN_PROBABILITY = 0.1  # 10% chance to have a campaign in each sale
 
-# HELPER FUNCTIONS
+# Weighted GDP approach for store location
+# We'll keep a simple list of countries with approximate GDP weighting factors (not real data)
+COUNTRIES_GDP = {
+    "USA": 21.4,
+    "China": 14.3,
+    "Japan": 5.0,
+    "Germany": 3.8,
+    "India": 2.9,
+    "UK": 2.7,
+    "France": 2.6,
+    "Italy": 2.0,
+    "Canada": 1.6,
+    "South Korea": 1.6,
+    "Russia": 1.5,
+    "Brazil": 1.4,
+    "Australia": 1.4,
+    "Spain": 1.3,
+    "Mexico": 1.2,
+}
 
-def get_random_date_time():
-    # Let's generate random date between 2022-01-01 and 2023-12-31 for example.
-    start_date = datetime.date(2022, 1, 1)
-    end_date = datetime.date(2023, 12, 31)
+# We also define a small helper for continent lookup
+COUNTRY_CONTINENT = {
+    "USA": "North America",
+    "China": "Asia",
+    "Japan": "Asia",
+    "Germany": "Europe",
+    "India": "Asia",
+    "UK": "Europe",
+    "France": "Europe",
+    "Italy": "Europe",
+    "Canada": "North America",
+    "South Korea": "Asia",
+    "Russia": "Europe",
+    "Brazil": "South America",
+    "Australia": "Australia",
+    "Spain": "Europe",
+    "Mexico": "North America",
+}
 
-    time_between = end_date - start_date
-    days_between = time_between.days
+# We want 45 stores across major cities worldwide.
+# We'll randomly pick from a pool of city data for each country.
+CITY_OPTIONS = {
+    "USA": [
+        ("New York", "NY"),
+        ("Los Angeles", "CA"),
+        ("Chicago", "IL"),
+        ("Houston", "TX"),
+        ("Phoenix", "AZ"),
+    ],
+    "China": [
+        ("Beijing", "Beijing"),
+        ("Shanghai", "Shanghai"),
+        ("Guangzhou", "Guangdong"),
+        ("Shenzhen", "Guangdong"),
+        ("Chengdu", "Sichuan"),
+    ],
+    "Japan": [
+        ("Tokyo", "Tokyo"),
+        ("Osaka", "Osaka"),
+        ("Nagoya", "Aichi"),
+        ("Fukuoka", "Fukuoka"),
+    ],
+    "Germany": [
+        ("Berlin", "Berlin"),
+        ("Munich", "Bavaria"),
+        ("Frankfurt", "Hesse"),
+    ],
+    "India": [
+        ("Mumbai", "Maharashtra"),
+        ("New Delhi", "Delhi"),
+        ("Bengaluru", "Karnataka"),
+        ("Chennai", "Tamil Nadu"),
+    ],
+    "UK": [
+        ("London", "England"),
+        ("Manchester", "England"),
+        ("Edinburgh", "Scotland"),
+    ],
+    "France": [
+        ("Paris", "Ile-de-France"),
+        ("Lyon", "Auvergne-Rhone-Alpes"),
+        ("Marseille", "Provence-Alpes-Cote d'Azur"),
+    ],
+    "Italy": [
+        ("Rome", "Lazio"),
+        ("Milan", "Lombardy"),
+        ("Naples", "Campania"),
+    ],
+    "Canada": [
+        ("Toronto", "ON"),
+        ("Vancouver", "BC"),
+        ("Montreal", "QC"),
+    ],
+    "South Korea": [
+        ("Seoul", "Seoul"),
+        ("Busan", "Busan"),
+        ("Incheon", "Incheon"),
+    ],
+    "Russia": [
+        ("Moscow", "Moscow"),
+        ("Saint Petersburg", "Northwestern"),
+    ],
+    "Brazil": [
+        ("Sao Paulo", "Sao Paulo"),
+        ("Rio de Janeiro", "Rio de Janeiro"),
+        ("Brasilia", "Federal District"),
+    ],
+    "Australia": [
+        ("Sydney", "NSW"),
+        ("Melbourne", "VIC"),
+        ("Brisbane", "QLD"),
+    ],
+    "Spain": [
+        ("Madrid", "Community of Madrid"),
+        ("Barcelona", "Catalonia"),
+        ("Valencia", "Valencia"),
+    ],
+    "Mexico": [
+        ("Mexico City", "Distrito Federal"),
+        ("Guadalajara", "Jalisco"),
+        ("Monterrey", "Nuevo Leon"),
+    ],
+}
 
-    random_num = random.randint(0, days_between)
-    random_date = start_date + datetime.timedelta(days=random_num)
 
-    random_hour = random.randint(0, 23)
-    random_minute = random.randint(0, 59)
-    random_second = random.randint(0, 59)
+def generate_stores(num_stores=45):
+    # We create a list of (country, weighting) from the GDP dict
+    # Then we'll do a weighted selection for countries, pick random city from that country.
+    all_countries = list(COUNTRIES_GDP.keys())
+    total_gdp = sum(COUNTRIES_GDP.values())
+    # Weighted distribution for selecting countries
 
-    return random_date, datetime.time(random_hour, random_minute, random_second)
+    stores = []
+    used_store_names = set()
+
+    for _ in range(num_stores):
+        # Weighted random pick of country
+        r = random.uniform(0, total_gdp)
+        cumulative = 0
+        for country, gdp_val in COUNTRIES_GDP.items():
+            cumulative += gdp_val
+            if r <= cumulative:
+                chosen_country = country
+                break
+        # pick random city
+        if chosen_country in CITY_OPTIONS:
+            city, state = random.choice(CITY_OPTIONS[chosen_country])
+        else:
+            # fallback
+            city, state = ("Unknown City", "Unknown State")
+        continent = COUNTRY_CONTINENT.get(chosen_country, "Unknown Continent")
+
+        # Make a store name by combining city with a random number
+        # ensure uniqueness
+        for attempt in range(1000):
+            store_name = f"{city} Store #{random.randint(1,9999)}"
+            if store_name not in used_store_names:
+                used_store_names.add(store_name)
+                break
+        stores.append((store_name, city, state, chosen_country, continent))
+
+    return stores
 
 
-def get_seasonality_multiplier(category_name, month):
-    """Return a factor (e.g. 1.0 means normal, 1.5 means 50% surge) based on category's seasonality."""
-    for cat in CATEGORIES:
-        if cat['name'] == category_name:
-            for peak_start, peak_end in cat['seasonality_peaks']:
-                if peak_start <= month <= peak_end:
-                    return 1.5  # 50% more likely in peak
+def expand_products_and_categories():
+    # Flatten out the product list for each category
+    products = []
+    cat_map = {}
+    product_id = 1
+
+    for cat_idx, category in enumerate(CATEGORIES, start=1):
+        cat_map[cat_idx] = category
+        product_list = CATEGORY_PRODUCTS.get(category, [])
+        for (product_name, price_range) in product_list:
+            products.append((product_id, product_name, cat_idx, price_range[0], price_range[1]))
+            product_id += 1
+
+    return cat_map, products
+
+
+def seasonality_factor(category, month):
+    if category in SEASONALITY:
+        if month in SEASONALITY[category]:
+            return SEASONALITY[category][month]
     return 1.0
 
 
-def choose_store_by_gdp_weighting(stores):
-    # Weighted random choice based on GDP index.
-    # store: (store_name, city, state, country, continent)
-    # We get the GDP weight. We'll do a cumulative distribution.
-
-    total_weight = 0.0
-    weights = []
-    for s in stores:
-        ctry = s[3]
-        gdp_val = GDP_INDEX.get(ctry, DEFAULT_GDP_INDEX)
-        weights.append(gdp_val)
-        total_weight += gdp_val
-
-    rand_val = random.random() * total_weight
-    cumulative = 0.0
-    for i, s in enumerate(stores):
-        cumulative += weights[i]
-        if rand_val < cumulative:
-            return s
-    return stores[-1]  # Fallback
-
-
 def main():
+    random.seed(42)  # For reproducibility if desired
 
-    # 1. Write categories to categories_O1.csv
-    with open('categories_O1.csv', mode='w', newline='', encoding='utf-8') as cat_file:
-        writer = csv.writer(cat_file)
-        writer.writerow(['category_name'])
-        for c in CATEGORIES:
-            writer.writerow([c['name']])
+    # Generate stores
+    stores = generate_stores(45)
 
-    # 2. Write products to products_O1.csv along with category
-    # We'll flatten the PRODUCTS_PER_CATEGORY structure.
-    products_list = []  # (product_name, category_name, popularity_factor)
-    for cat, prod_tuples in PRODUCTS_PER_CATEGORY.items():
-        for pt in prod_tuples:
-            products_list.append((pt[0], cat, pt[1]))
+    # Expand categories and products
+    cat_map, products = expand_products_and_categories()
 
-    with open('products_O1.csv', mode='w', newline='', encoding='utf-8') as prod_file:
-        writer = csv.writer(prod_file)
-        writer.writerow(['product_name', 'category_name'])
-        for p in products_list:
-            writer.writerow([p[0], p[1]])
+    # Save categories to categories_O1.csv
+    with open('categories_O1.csv', 'w', newline='', encoding='utf-8') as f_cat:
+        writer = csv.writer(f_cat)
+        writer.writerow(["category_id", "category_name"])
+        for cat_id, cat_name in cat_map.items():
+            writer.writerow([cat_id, cat_name])
 
-    # 3. Write store data to stores_O1.csv
-    with open('stores_O1.csv', mode='w', newline='', encoding='utf-8') as store_file:
-        writer = csv.writer(store_file)
-        writer.writerow(['store_name', 'city', 'state', 'country', 'continent'])
-        for s in STORE_DATA:
-            writer.writerow(list(s))
+    # Save products to products_O1.csv (product_id, product_name, category_id, min_price, max_price)
+    with open('products_O1.csv', 'w', newline='', encoding='utf-8') as f_prod:
+        writer = csv.writer(f_prod)
+        writer.writerow(["product_id", "product_name", "category_id", "min_price", "max_price"])
+        for p in products:
+            writer.writerow(p)
 
-    # Prepare popularity weighting for products.
-    total_pop = sum([p[2] for p in products_list])
-    # We'll create a cumulative distribution over these products.
-    cumulative_pop = []
-    running_sum = 0
-    for p in products_list:
-        running_sum += p[2]
-        cumulative_pop.append((running_sum, p))
+    # Save stores to stores_O1.csv
+    # store name, city, state, country, continent
+    with open('stores_O1.csv', 'w', newline='', encoding='utf-8') as f_stores:
+        writer = csv.writer(f_stores)
+        writer.writerow(["store_name", "city", "state", "country", "continent"])
+        for store in stores:
+            writer.writerow(store)
 
-    def choose_product():
-        r = random.random() * total_pop
-        for cp, product in cumulative_pop:
-            if r <= cp:
-                return product
-        return cumulative_pop[-1][1]
+    # We'll build a product popularity weighting
+    # Let's say half of the products are top sellers with a higher probability
+    # We'll simply create a distribution by assigning random popularity scores.
 
-    # 4. Generate sales data in sales_data_O1.csv
-    # Fields: date, time, product name, unit price, quantity, revenue, store name, campaign
-    with open('sales_data_O1.csv', mode='w', newline='', encoding='utf-8') as sales_file:
-        writer = csv.writer(sales_file)
-        writer.writerow(['date', 'time', 'product_name', 'unit_price', 'quantity', 'revenue', 'store_name', 'campaign'])
-        for i in range(NUM_SALES_RECORDS):
-            random_date, random_time = get_random_date_time()
-            # choose product
-            product_name, category_name, popularity_factor = choose_product()
+    product_popularity = {}
+    for pid, pname, cat_id, pmin, pmax in products:
+        # random popularity score 1-100, with some distribution
+        popularity_score = random.randint(1, 100)
+        product_popularity[pid] = popularity_score
 
-            # get seasonality multiplier
-            multiplier = get_seasonality_multiplier(category_name, random_date.month)
+    # We'll also build a weighting for each store based on the country GDP so that
+    # stores in higher GDP countries appear more often in the dataset.
+    store_gdp_weights = []
+    for store in stores:
+        # store is (store_name, city, state, country, continent)
+        country = store[3]
+        gdp_val = COUNTRIES_GDP.get(country, 1.0)
+        store_gdp_weights.append(gdp_val)
 
-            # further adjust probability but since we already decided on product, let's reflect that in quantity
-            # random quantity from 1 to 5, then multiply by some factor if seasonality is high
-            base_quantity = random.randint(1, 5)
-            quantity = int(math.ceil(base_quantity * multiplier))
+    total_store_weight = sum(store_gdp_weights)
 
-            # get price range
-            cat_obj = next(c for c in CATEGORIES if c['name'] == category_name)
-            min_price, max_price = cat_obj['price_range']
-            unit_price = round(random.uniform(min_price, max_price), 2)
+    # We'll generate the sales_data_O1.csv now
+    # date, time, product name, unit price, quantity, revenue, store name, optional sales campaign
 
-            # store
-            store_record = choose_store_by_gdp_weighting(STORE_DATA)
-            store_name = store_record[0]
+    # We'll pick random dates in a certain range, e.g., 1 year
+    # from Jan 1, 2024 to Dec 31, 2024.
+    start_date = datetime.date(2024, 1, 1)
+    end_date = datetime.date(2024, 12, 31)
+    delta_days = (end_date - start_date).days + 1
+
+    # Pre-generate date list for efficiency?
+    # or just pick random day offset
+
+    with open('sales_data_O1.csv', 'w', newline='', encoding='utf-8') as f_sales:
+        writer = csv.writer(f_sales)
+        writer.writerow(["date", "time", "product_name", "unit_price", "quantity", "revenue", "store_name", "campaign"])
+
+        for i in range(1, NUM_SALES_RECORDS + 1):
+            # pick a store with weighted probability
+            r = random.uniform(0, total_store_weight)
+            cumulative = 0.0
+            chosen_store_index = 0
+            for idx, weight in enumerate(store_gdp_weights):
+                cumulative += weight
+                if r <= cumulative:
+                    chosen_store_index = idx
+                    break
+            chosen_store = stores[chosen_store_index]
+
+            # pick a product with popularity weighting
+            # sum of popularity
+            total_popularity = sum(product_popularity.values())
+            r2 = random.uniform(0, total_popularity)
+            cum2 = 0.0
+            chosen_product = None
+            for p in products:
+                pid, pname, cat_id, pmin, pmax = p
+                cum2 += product_popularity[pid]
+                if r2 <= cum2:
+                    chosen_product = p
+                    break
+
+            if not chosen_product:
+                chosen_product = random.choice(products)
+            pid, pname, cat_id, pmin, pmax = chosen_product
+
+            # figure out date/time
+            day_offset = random.randint(0, delta_days - 1)
+            sale_date = start_date + datetime.timedelta(days=day_offset)
+            sale_time = datetime.time(
+                hour=random.randint(0, 23),
+                minute=random.randint(0, 59),
+                second=random.randint(0, 59)
+            )
+
+            # incorporate seasonality
+            month = sale_date.month
+            cat_name = cat_map[cat_id]
+            s_factor = seasonality_factor(cat_name, month)
+
+            # pick quantity in a realistic manner
+            # base quantity 1-3
+            # plus factor from seasonality
+            base_qty = random.randint(1, 3)
+            # scale up occasionally
+            if random.random() < 0.05:
+                base_qty += random.randint(1, 5)
+            quantity = int(round(base_qty * s_factor))
+            if quantity < 1:
+                quantity = 1
+
+            # pick a random unit price in [pmin, pmax]
+            unit_price = round(random.uniform(pmin, pmax), 2)
 
             # campaign?
             campaign = ""
             if random.random() < CAMPAIGN_PROBABILITY:
-                campaign = random.choice(CAMPAIGNS)
+                campaign = random.choice(CAMPAIGN_NAMES)
 
-            # revenue
+            # compute revenue
             revenue = round(unit_price * quantity, 2)
 
+            # write the row
             writer.writerow([
-                random_date.isoformat(),
-                random_time.isoformat(timespec='seconds'),
-                product_name,
+                sale_date.isoformat(),
+                sale_time.strftime("%H:%M:%S"),
+                pname,
                 unit_price,
                 quantity,
                 revenue,
-                store_name,
-                campaign
+                chosen_store[0],
+                campaign,
             ])
 
-            if (i+1) % 1000 == 0:
-                print(f"Generated {i+1} sales records...")
+            # progress
+            if i % PROGRESS_INTERVAL == 0:
+                print(f"Generated {i} sales records...")
 
-    # Summary
-    print("--- Generation Summary ---")
+    # Summarize
+    print("Generation complete.")
     print(f"Total categories: {len(CATEGORIES)}")
-    print(f"Total products: {len(products_list)}")
-    print(f"Total stores: {len(STORE_DATA)}")
-    print(f"Total sales records generated: {NUM_SALES_RECORDS}")
-
+    total_products = len(products)
+    print(f"Total products: {total_products}")
+    total_stores = len(stores)
+    print(f"Total stores: {total_stores}")
+    print(f"Total sales records: {NUM_SALES_RECORDS}")
+    print("\ndata generation by DataGeneration-o1.py")
 if __name__ == "__main__":
     main()

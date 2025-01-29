@@ -20,293 +20,206 @@ SOFTWARE.
 """
 import csv
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 # Configuration
-NUM_SALES = 10000  # Adjust number of sales records as needed
+NUM_SALES = 10000  # Adjust this number as needed
 
-# Categories and Products
-categories = [
-    'Electronics',
-    'Clothing',
-    'Home & Kitchen',
-    'Books',
-    'Toys & Games',
-    'Sports & Outdoors',
-    'Beauty & Personal Care',
-    'Groceries'
-]
-
-products = [
-    # Electronics
-    {'name': 'Smartphone', 'category': 'Electronics', 'min_price': 500, 'max_price': 1000, 'base_weight': 2.0},
-    {'name': 'Laptop', 'category': 'Electronics', 'min_price': 800, 'max_price': 2000, 'base_weight': 1.5},
-    {'name': 'Headphones', 'category': 'Electronics', 'min_price': 50, 'max_price': 300, 'base_weight': 2.5},
-    
-    # Clothing
-    {'name': 'T-Shirt', 'category': 'Clothing', 'min_price': 10, 'max_price': 30, 'base_weight': 3.0},
-    {'name': 'Jeans', 'category': 'Clothing', 'min_price': 40, 'max_price': 80, 'base_weight': 2.5},
-    {'name': 'Winter Jacket', 'category': 'Clothing', 'min_price': 80, 'max_price': 150, 'base_weight': 1.8},
-    
-    # Home & Kitchen
-    {'name': 'Blender', 'category': 'Home & Kitchen', 'min_price': 40, 'max_price': 120, 'base_weight': 1.5},
-    {'name': 'Cookware Set', 'category': 'Home & Kitchen', 'min_price': 100, 'max_price': 300, 'base_weight': 1.2},
-    
-    # Books
-    {'name': 'Bestseller Novel', 'category': 'Books', 'min_price': 10, 'max_price': 25, 'base_weight': 2.0},
-    {'name': 'Cookbook', 'category': 'Books', 'min_price': 15, 'max_price': 35, 'base_weight': 1.5},
-    
-    # Toys & Games
-    {'name': 'Board Game', 'category': 'Toys & Games', 'min_price': 20, 'max_price': 50, 'base_weight': 2.2},
-    {'name': 'LEGO Set', 'category': 'Toys & Games', 'min_price': 30, 'max_price': 100, 'base_weight': 2.5},
-    
-    # Sports & Outdoors
-    {'name': 'Yoga Mat', 'category': 'Sports & Outdoors', 'min_price': 15, 'max_price': 40, 'base_weight': 1.8},
-    {'name': 'Running Shoes', 'category': 'Sports & Outdoors', 'min_price': 60, 'max_price': 120, 'base_weight': 2.0},
-    
-    # Beauty & Personal Care
-    {'name': 'Skincare Set', 'category': 'Beauty & Personal Care', 'min_price': 30, 'max_price': 80, 'base_weight': 2.2},
-    {'name': 'Perfume', 'category': 'Beauty & Personal Care', 'min_price': 50, 'max_price': 150, 'base_weight': 1.5},
-    
-    # Groceries
-    {'name': 'Organic Coffee', 'category': 'Groceries', 'min_price': 8, 'max_price': 15, 'base_weight': 3.5},
-    {'name': 'Snack Box', 'category': 'Groceries', 'min_price': 5, 'max_price': 10, 'base_weight': 4.0}
-]
-
-# Stores and Countries Data
-countries = [
-    {
-        'name': 'USA', 'continent': 'North America', 'gdp': 25e12,
-        'cities': [
-            {'name': 'New York', 'state': 'NY'},
-            {'name': 'Los Angeles', 'state': 'CA'},
-            {'name': 'Chicago', 'state': 'IL'},
-            {'name': 'Houston', 'state': 'TX'},
-            {'name': 'Phoenix', 'state': 'AZ'}
-        ]
-    },
-    {
-        'name': 'Japan', 'continent': 'Asia', 'gdp': 4.9e12,
-        'cities': [
-            {'name': 'Tokyo', 'state': 'Kanto'},
-            {'name': 'Osaka', 'state': 'Kansai'}
-        ]
-    },
-    {
-        'name': 'Germany', 'continent': 'Europe', 'gdp': 4.2e12,
-        'cities': [
-            {'name': 'Berlin', 'state': 'Berlin'},
-            {'name': 'Hamburg', 'state': 'Hamburg'},
-            {'name': 'Munich', 'state': 'Bavaria'}
-        ]
-    },
-    {
-        'name': 'UK', 'continent': 'Europe', 'gdp': 3.1e12,
-        'cities': [
-            {'name': 'London', 'state': 'England'},
-            {'name': 'Manchester', 'state': 'England'},
-            {'name': 'Edinburgh', 'state': 'Scotland'}
-        ]
-    },
-    {
-        'name': 'China', 'continent': 'Asia', 'gdp': 18e12,
-        'cities': [
-            {'name': 'Beijing', 'state': 'Hebei'},
-            {'name': 'Shanghai', 'state': 'Jiangsu'},
-            {'name': 'Guangzhou', 'state': 'Guangdong'}
-        ]
-    },
-    {
-        'name': 'Brazil', 'continent': 'South America', 'gdp': 1.9e12,
-        'cities': [
-            {'name': 'Sao Paulo', 'state': 'SP'},
-            {'name': 'Rio de Janeiro', 'state': 'RJ'}
-        ]
-    },
-    {
-        'name': 'Australia', 'continent': 'Oceania', 'gdp': 1.6e12,
-        'cities': [
-            {'name': 'Sydney', 'state': 'NSW'},
-            {'name': 'Melbourne', 'state': 'VIC'}
-        ]
-    },
-    {
-        'name': 'South Africa', 'continent': 'Africa', 'gdp': 400e9,
-        'cities': [
-            {'name': 'Cape Town', 'state': 'Western Cape'},
-            {'name': 'Johannesburg', 'state': 'Gauteng'}
-        ]
-    },
-    {
-        'name': 'India', 'continent': 'Asia', 'gdp': 3.4e12,
-        'cities': [
-            {'name': 'Mumbai', 'state': 'Maharashtra'},
-            {'name': 'Delhi', 'state': 'Delhi'}
-        ]
-    }
+# Categories Configuration
+CATEGORIES = [
+    {'id': 1, 'name': 'Electronics', 'price_range': (100, 2000)},
+    {'id': 2, 'name': 'Clothing', 'price_range': (20, 150)},
+    {'id': 3, 'name': 'Groceries', 'price_range': (5, 50)},
+    {'id': 4, 'name': 'Home & Kitchen', 'price_range': (30, 500)},
+    {'id': 5, 'name': 'Books', 'price_range': (10, 40)},
+    {'id': 6, 'name': 'Sports & Outdoors', 'price_range': (50, 300)},
+    {'id': 7, 'name': 'Toys & Games', 'price_range': (15, 200)},
+    {'id': 8, 'name': 'Beauty', 'price_range': (10, 100)},
+    {'id': 9, 'name': 'Automotive', 'price_range': (50, 1000)},
 ]
 
 # Seasonality Configuration
-category_seasonality = {
-    'Electronics': {'peak_months': [11, 12], 'multiplier': 2.0},
-    'Clothing': {'peak_months': [6, 7], 'multiplier': 1.8},
-    'Home & Kitchen': {'peak_months': [4], 'multiplier': 1.5},
-    'Books': {'peak_months': [11, 12], 'multiplier': 1.4},
-    'Toys & Games': {'peak_months': [12], 'multiplier': 2.2},
-    'Sports & Outdoors': {'peak_months': [5, 6], 'multiplier': 1.6},
-    'Beauty & Personal Care': {'peak_months': [11, 12], 'multiplier': 1.7},
-    'Groceries': {'peak_months': [], 'multiplier': 1.0}  # No seasonality
+SEASONALITY = {
+    'Electronics': [11, 12],  # November-December
+    'Clothing': [6, 7, 8],    # Summer months
+    'Sports & Outdoors': [5, 6, 7],  # Summer
+    'Toys & Games': [11, 12], # Holiday season
+    'Home & Kitchen': [4, 5], # Spring cleaning
+    'Beauty': [3, 4, 5],      # Spring
 }
 
-# Sales Campaigns
-campaigns = [
-    {
-        'name': '10% off Black Friday',
-        'start_date': datetime(2023, 11, 24),
-        'end_date': datetime(2023, 11, 27)
-    },
-    {
-        'name': 'Summer Sale',
-        'start_date': datetime(2023, 6, 1),
-        'end_date': datetime(2023, 6, 30)
-    },
-    {
-        'name': 'Back to School',
-        'start_date': datetime(2023, 8, 15),
-        'end_date': datetime(2023, 9, 15)
-    },
-    {
-        'name': 'Cyber Monday',
-        'start_date': datetime(2023, 11, 27),
-        'end_date': datetime(2023, 11, 27)
-    },
-    {
-        'name': 'Holiday Special',
-        'start_date': datetime(2023, 12, 15),
-        'end_date': datetime(2023, 12, 31)
-    }
+# Campaign Configuration
+CAMPAIGNS = [
+    {'name': '10% off Black Friday', 'discount': 0.10},
+    {'name': 'Summer Sale 20%', 'discount': 0.20},
+    {'name': 'Holiday Special 15%', 'discount': 0.15},
+    {'name': 'Spring Clearance 25%', 'discount': 0.25},
 ]
 
-# Rest of the code remains the same as previous version...
-# [Include all the functions (generate_categories, generate_products, generate_stores, generate_sales_data, main) 
-#  from the original code here without changes]
-
-def generate_categories():
-    with open('categories_DS.csv', 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['category_name'])
-        writer.writerows([[c] for c in categories])
-
-def generate_products():
-    with open('products_DS.csv', 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['product_name', 'category_name'])
-        writer.writerows([[p['name'], p['category']] for p in products])
-
+# Generate Stores Data
 def generate_stores():
+    cities = [
+        # North America
+        {'city': 'New York', 'state': 'NY', 'country': 'USA', 'continent': 'North America', 'gdp_weight': 25},
+        {'city': 'Los Angeles', 'state': 'CA', 'country': 'USA', 'continent': 'North America', 'gdp_weight': 25},
+        # Europe
+        {'city': 'London', 'state': 'England', 'country': 'UK', 'continent': 'Europe', 'gdp_weight': 6},
+        {'city': 'Paris', 'state': 'Île-de-France', 'country': 'France', 'continent': 'Europe', 'gdp_weight': 5},
+        # Asia
+        {'city': 'Tokyo', 'state': 'Tokyo', 'country': 'Japan', 'continent': 'Asia', 'gdp_weight': 8},
+        {'city': 'Beijing', 'state': 'Hebei', 'country': 'China', 'continent': 'Asia', 'gdp_weight': 20},
+        # Add more cities to reach 45...
+    ]
+    
     stores = []
-    for country in countries:
-        for city_info in country['cities']:
-            stores.append({
-                'store_name': f"{city_info['name']} Store",
-                'city': city_info['name'],
-                'state': city_info.get('state', ''),
-                'country': country['name'],
-                'continent': country['continent'],
-                'gdp': country['gdp']
-            })
-    
-    # Calculate store weights
-    for store in stores:
-        country = next(c for c in countries if c['name'] == store['country'])
-        store['gdp_weight'] = country['gdp'] / len(country['cities'])
-    
-    with open('stores_DS.csv', 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=stores[0].keys())
-        writer.writeheader()
-        writer.writerows(stores)
+    store_names = set()
+    for i in range(45):
+        while True:
+            city = random.choice(cities)
+            store_name = f"{city['city']} Store {i+1}"
+            if store_name not in store_names:
+                store_names.add(store_name)
+                break
+        stores.append({
+            'store_name': store_name,
+            'city': city['city'],
+            'state': city['state'],
+            'country': city['country'],
+            'continent': city['continent'],
+            'gdp_weight': city['gdp_weight']
+        })
     return stores
 
-def generate_sales_data(stores):
+# Generate Products Data
+def generate_products():
+    products = []
+    product_id = 1
+    for category in CATEGORIES:
+        for i in range(10):  # 10 products per category
+            product = {
+                'id': product_id,
+                'name': f"{category['name']} Product {i+1}",
+                'category_id': category['id'],
+                'unit_price': round(random.uniform(*category['price_range']), 2),
+                'popularity': random.choices([1, 3, 5], weights=[0.2, 0.6, 0.2])[0]
+            }
+            products.append(product)
+            product_id += 1
+    return products
+
+# Generate Sales Data
+def generate_sales(stores, products):
     start_date = datetime(2023, 1, 1)
     end_date = datetime(2023, 12, 31)
     date_range = (end_date - start_date).days
-
-    with open('sales_data_DS.csv', 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            'date', 'time', 'product_name', 'unit_price',
-            'quantity', 'revenue', 'store_name', 'sales_campaign'
-        ])
-        writer.writeheader()
-
+    
+    store_weights = [store['gdp_weight'] for store in stores]
+    store_indices = list(range(len(stores)))
+    
+    with open('sales_data_DS.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['date', 'time', 'product_name', 'unit_price', 
+                        'quantity', 'revenue', 'store_name', 'campaign'])
+        
         for i in range(NUM_SALES):
-            if (i + 1) % 1000 == 0:
-                print(f'Generated {i + 1} records...')
-
-            # Generate sale details
-            sale_date = start_date + timedelta(days=random.randint(0, date_range))
-            current_month = sale_date.month
+            if i % 1000 == 0:
+                print(f"Generated {i} records...")
             
-            # Select product with seasonality
+            # Random date and time
+            random_date = start_date + timedelta(days=random.randint(0, date_range))
+            random_time = time(
+                random.randint(0, 23),
+                random.randint(0, 59),
+                random.randint(0, 59)
+            )
+            
+            # Select store based on GDP weights
+            store_idx = random.choices(store_indices, weights=store_weights, k=1)[0]
+            store = stores[store_idx]
+            
+            # Select product with seasonality adjustment
             product_weights = []
-            for p in products:
-                season = category_seasonality[p['category']]
-                multiplier = season['multiplier'] if season['peak_months'] and current_month in season['peak_months'] else 1.0
-                product_weights.append(p['base_weight'] * multiplier)
+            month = random_date.month
+            for product in products:
+                category = next(cat for cat in CATEGORIES if cat['id'] == product['category_id'])
+                season_boost = 2 if (category['name'] in SEASONALITY and 
+                                    month in SEASONALITY[category['name']]) else 1
+                product_weights.append(product['popularity'] * season_boost)
             
-            product = random.choices(products, weights=product_weights, k=1)[0]
+            product_idx = random.choices(range(len(products)), weights=product_weights, k=1)[0]
+            product = products[product_idx]
             
-            # Select store with GDP weighting
-            store = random.choices(stores, weights=[s['gdp_weight'] for s in stores], k=1)[0]
+            # Apply campaign discount
+            campaign = None
+            unit_price = product['unit_price']
+            if random.random() < 0.1:  # 10% chance of campaign
+                campaign = random.choice(CAMPAIGNS)
+                unit_price = round(unit_price * (1 - campaign['discount']), 2)
             
-            # Generate pricing and quantity
-            unit_price = round(random.uniform(product['min_price'], product['max_price']), 2)
-            quantity = random.randint(1, 10)
+            # Generate quantity and calculate revenue
+            quantity = random.randint(1, 5)
             revenue = round(unit_price * quantity, 2)
             
-            # Determine campaign
-            campaign = None
-            if random.random() < 0.1:
-                active_campaigns = []
-                for c in campaigns:
-                    if c['start_date'] and c['end_date']:
-                        if c['start_date'] <= sale_date <= c['end_date']:
-                            active_campaigns.append(c['name'])
-                    else:
-                        active_campaigns.append(c['name'])
-                if active_campaigns:
-                    campaign = random.choice(active_campaigns)
-            
-            # Write record
+            writer.writerow([
+                random_date.strftime('%Y-%m-%d'),
+                random_time.strftime('%H:%M:%S'),
+                product['name'],
+                unit_price,
+                quantity,
+                revenue,
+                store['store_name'],
+                campaign['name'] if campaign else ''
+            ])
+
+# Save supporting data files
+def save_supporting_data(categories, products, stores):
+    # Save categories
+    with open('categories_DS.csv', 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=['category_id', 'category_name'])
+        writer.writeheader()
+        for cat in CATEGORIES:
+            writer.writerow({'category_id': cat['id'], 'category_name': cat['name']})
+    
+    # Save products
+    with open('products_DS.csv', 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=['product_id', 'product_name', 'category_id', 'unit_price'])
+        writer.writeheader()
+        for prod in products:
             writer.writerow({
-                'date': sale_date.strftime('%Y-%m-%d'),
-                'time': f"{random.randint(8, 20):02d}:{random.randint(0, 59):02d}",
-                'product_name': product['name'],
-                'unit_price': unit_price,
-                'quantity': quantity,
-                'revenue': revenue,
+                'product_id': prod['id'],
+                'product_name': prod['name'],
+                'category_id': prod['category_id'],
+                'unit_price': prod['unit_price']
+            })
+    
+    # Save stores
+    with open('stores_DS.csv', 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=['store_name', 'city', 'state', 'country', 'continent'])
+        writer.writeheader()
+        for store in stores:
+            writer.writerow({
                 'store_name': store['store_name'],
-                'sales_campaign': campaign or ''
+                'city': store['city'],
+                'state': store['state'],
+                'country': store['country'],
+                'continent': store['continent']
             })
 
+# Main execution
 def main():
-    print("Generating categories...")
-    generate_categories()
+    print("Generating data...")
     
-    print("Generating products...")
-    generate_products()
-    
-    print("Generating stores...")
     stores = generate_stores()
+    products = generate_products()
     
-    print("Generating sales data...")
-    generate_sales_data(stores)
+    generate_sales(stores, products)
+    save_supporting_data(CATEGORIES, products, stores)
     
-    print("\nSummary Statistics:")
-    print(f"Total categories: {len(categories)}")
+    print("\nData generation complete!")
+    print(f"Total categories: {len(CATEGORIES)}")
     print(f"Total products: {len(products)}")
     print(f"Total stores: {len(stores)}")
     print(f"Total sales records: {NUM_SALES}")
-
-if __name__ == '__main__':
+    print("\ndata generation by DataGeneration-deepSeek.py")
+if __name__ == "__main__":
     main()

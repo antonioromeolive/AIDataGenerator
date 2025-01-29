@@ -7,4 +7,8 @@ sales_data_AI.csv
 stores_AI.csv
 products_AI.csv
 categories_AI.csv
-with AI=DS for deepseek generated code or O1 for ChatGPT one
+
+with AI = DS for deepseek generated data 
+     AI = O1 for ChatGPT  generated data 
+     AI = CP for copilot  generated data 
+     

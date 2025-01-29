@@ -1,19 +1,91 @@
-product_name,category_name
-Smartphone,Electronics
-Laptop,Electronics
-Headphones,Electronics
-T-Shirt,Clothing
-Jeans,Clothing
-Winter Jacket,Clothing
-Blender,Home & Kitchen
-Cookware Set,Home & Kitchen
-Bestseller Novel,Books
-Cookbook,Books
-Board Game,Toys & Games
-LEGO Set,Toys & Games
-Yoga Mat,Sports & Outdoors
-Running Shoes,Sports & Outdoors
-Skincare Set,Beauty & Personal Care
-Perfume,Beauty & Personal Care
-Organic Coffee,Groceries
-Snack Box,Groceries
+product_id,product_name,category_id,unit_price
+1,Electronics Product 1,1,1491.36
+2,Electronics Product 2,1,1002.47
+3,Electronics Product 3,1,457.74
+4,Electronics Product 4,1,247.93
+5,Electronics Product 5,1,733.29
+6,Electronics Product 6,1,1244.19
+7,Electronics Product 7,1,151.63
+8,Electronics Product 8,1,204.31
+9,Electronics Product 9,1,1364.91
+10,Electronics Product 10,1,711.28
+11,Clothing Product 1,2,61.49
+12,Clothing Product 2,2,34.07
+13,Clothing Product 3,2,138.42
+14,Clothing Product 4,2,42.95
+15,Clothing Product 5,2,127.59
+16,Clothing Product 6,2,71.74
+17,Clothing Product 7,2,115.25
+18,Clothing Product 8,2,131.96
+19,Clothing Product 9,2,114.18
+20,Clothing Product 10,2,23.11
+21,Groceries Product 1,3,47.17
+22,Groceries Product 2,3,13.35
+23,Groceries Product 3,3,6.89
+24,Groceries Product 4,3,39.92
+25,Groceries Product 5,3,30.16
+26,Groceries Product 6,3,14.22
+27,Groceries Product 7,3,10.83
+28,Groceries Product 8,3,36.61
+29,Groceries Product 9,3,37.6
+30,Groceries Product 10,3,8.81
+31,Home & Kitchen Product 1,4,479.24
+32,Home & Kitchen Product 2,4,147.16
+33,Home & Kitchen Product 3,4,423.97
+34,Home & Kitchen Product 4,4,306.82
+35,Home & Kitchen Product 5,4,216.75
+36,Home & Kitchen Product 6,4,266.34
+37,Home & Kitchen Product 7,4,112.53
+38,Home & Kitchen Product 8,4,47.72
+39,Home & Kitchen Product 9,4,225.31
+40,Home & Kitchen Product 10,4,459.91
+41,Books Product 1,5,33.63
+42,Books Product 2,5,18.9
+43,Books Product 3,5,37.29
+44,Books Product 4,5,30.14
+45,Books Product 5,5,19.5
+46,Books Product 6,5,31.58
+47,Books Product 7,5,31.38
+48,Books Product 8,5,15.87
+49,Books Product 9,5,19.53
+50,Books Product 10,5,18.39
+51,Sports & Outdoors Product 1,6,123.75
+52,Sports & Outdoors Product 2,6,125.62
+53,Sports & Outdoors Product 3,6,98.93
+54,Sports & Outdoors Product 4,6,180.98
+55,Sports & Outdoors Product 5,6,215.15
+56,Sports & Outdoors Product 6,6,54.81
+57,Sports & Outdoors Product 7,6,202.15
+58,Sports & Outdoors Product 8,6,93.34
+59,Sports & Outdoors Product 9,6,133.3
+60,Sports & Outdoors Product 10,6,279.77
+61,Toys & Games Product 1,7,147.94
+62,Toys & Games Product 2,7,196.11
+63,Toys & Games Product 3,7,32.05
+64,Toys & Games Product 4,7,133.84
+65,Toys & Games Product 5,7,162.43
+66,Toys & Games Product 6,7,33.32
+67,Toys & Games Product 7,7,164.82
+68,Toys & Games Product 8,7,193.82
+69,Toys & Games Product 9,7,25.11
+70,Toys & Games Product 10,7,121.23
+71,Beauty Product 1,8,15.75
+72,Beauty Product 2,8,39.99
+73,Beauty Product 3,8,25.78
+74,Beauty Product 4,8,34.16
+75,Beauty Product 5,8,78.69
+76,Beauty Product 6,8,50.46
+77,Beauty Product 7,8,35.42
+78,Beauty Product 8,8,82.67
+79,Beauty Product 9,8,32.3
+80,Beauty Product 10,8,15.09
+81,Automotive Product 1,9,961.91
+82,Automotive Product 2,9,100.29
+83,Automotive Product 3,9,336.68
+84,Automotive Product 4,9,64.63
+85,Automotive Product 5,9,757.61
+86,Automotive Product 6,9,301.92
+87,Automotive Product 7,9,132.48
+88,Automotive Product 8,9,761.52
+89,Automotive Product 9,9,975.91
+90,Automotive Product 10,9,180.72
