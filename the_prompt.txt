@@ -1,0 +1,9 @@
+Let's write a python program to: Generate and store detailed sales data in the file sales_data.csv. Each record will include the following fields: date, time, product name, unit price, quantity, revenue, store name, and an optional sales campaign.
+Create meaningful categories and assign them to products. Save categories to categories.csv and pairings of products and categories to products.csv.
+Generate a list of 45 unique store names located in major cities worldwide. Save this data to stores.csv, including store name, city, state, country, and continent. Sales will be weighted proportionally to the GDP of the store's country.
+Account for seasonality when generating sales data, with adjustments for product categories that typically experience demand surges during specific times of the year (e.g., holidays for electronics).
+Include special offers in some sales records, with campaign names like "10% off Black Friday" or "Summer Sale." The inclusion of campaigns will follow a random probability.
+Ensure that product sales reflect realistic trends by distinguishing top sellers and bottom sellers, ensuring variance in popularity.
+Determine unit prices within realistic market ranges (min-max) for each product type, ensuring a believable pricing strategy.
+Display progress by printing a message every 1,000 records generated to track the operation's completion.
+Summarize results with statistics, including the total number of categories, products, stores, and sales records generated.
