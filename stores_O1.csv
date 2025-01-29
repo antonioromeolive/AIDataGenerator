@@ -1,0 +1,44 @@
+store_name,city,state,country,continent
+Tech Haven NYC,New York,NY,USA,North America
+Urban Apparel LA,Los Angeles,CA,USA,North America
+Gadget World CHI,Chicago,IL,USA,North America
+Electro Zone TOR,Toronto,ON,Canada,North America
+Metro Style PAR,Paris,Ile-de-France,France,Europe
+Fashion Hub LON,London,England,UK,Europe
+Digital Plaza BER,Berlin,Berlin,Germany,Europe
+Trendy Market TOK,Tokyo,Tokyo,Japan,Asia
+Alpha Store SYD,Sydney,NSW,Australia,Oceania
+Global Retail DXB,Dubai,Dubai,UAE,Asia
+Smart Mall SHA,Shanghai,Shanghai,China,Asia
+Electronics Hub MUM,Mumbai,Maharashtra,India,Asia
+Casual Wear SAO,Sao Paulo,Sao Paulo,Brazil,South America
+Trendy Outlet MEX,Mexico City,CDMX,Mexico,North America
+Chic Boutique ROM,Rome,Lazio,Italy,Europe
+CityMart MAD,Madrid,Madrid,Spain,Europe
+StyleStop AMS,Amsterdam,North Holland,Netherlands,Europe
+Eco Goods STO,Stockholm,Stockholm,Sweden,Europe
+Modern Tech SEL,Seoul,Seoul,South Korea,Asia
+MegaMart JNB,Johannesburg,Gauteng,South Africa,Africa
+TechnoZone HKG,Hong Kong,-,Hong Kong,Asia
+Digital Haven SIN,Singapore,-,Singapore,Asia
+Urban Market BUE,Buenos Aires,Buenos Aires,Argentina,South America
+Lifestyle Store ZRH,Zurich,Zurich,Switzerland,Europe
+Elite Shop VIE,Vienna,Vienna,Austria,Europe
+SmartChoice GVA,Geneva,Geneva,Switzerland,Europe
+TrendSpot MIL,Milan,Lombardy,Italy,Europe
+ShopWorld BCN,Barcelona,Catalonia,Spain,Europe
+Bazaar BKK,Bangkok,Bangkok,Thailand,Asia
+Global Goods KUL,Kuala Lumpur,-,Malaysia,Asia
+City Emporium CAI,Cairo,Cairo,Egypt,Africa
+Pacific Retail AKL,Auckland,Auckland,New Zealand,Oceania
+Urban Basics MTL,Montreal,QC,Canada,North America
+Tech Central BRU,Brussels,Brussels,Belgium,Europe
+Innova Market LUX,Luxembourg,-,Luxembourg,Europe
+Revive Shop LIS,Lisbon,Lisbon,Portugal,Europe
+Concept Store HEL,Helsinki,Uusimaa,Finland,Europe
+Mega Deals OSL,Oslo,Oslo,Norway,Europe
+Boutique BUD,Budapest,Central Hungary,Hungary,Europe
+Tech House PRG,Prague,Prague,Czech Republic,Europe
+CityStyle DUB,Dublin,Leinster,Ireland,Europe
+Metro Depot WAW,Warsaw,Masovian,Poland,Europe
+Shop Express ATH,Athens,Attica,Greece,Europe

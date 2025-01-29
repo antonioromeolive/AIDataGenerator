@@ -1,0 +1,25 @@
+store_name,city,state,country,continent,gdp,gdp_weight
+New York Store,New York,NY,USA,North America,25000000000000.0,5000000000000.0
+Los Angeles Store,Los Angeles,CA,USA,North America,25000000000000.0,5000000000000.0
+Chicago Store,Chicago,IL,USA,North America,25000000000000.0,5000000000000.0
+Houston Store,Houston,TX,USA,North America,25000000000000.0,5000000000000.0
+Phoenix Store,Phoenix,AZ,USA,North America,25000000000000.0,5000000000000.0
+Tokyo Store,Tokyo,Kanto,Japan,Asia,4900000000000.0,2450000000000.0
+Osaka Store,Osaka,Kansai,Japan,Asia,4900000000000.0,2450000000000.0
+Berlin Store,Berlin,Berlin,Germany,Europe,4200000000000.0,1400000000000.0
+Hamburg Store,Hamburg,Hamburg,Germany,Europe,4200000000000.0,1400000000000.0
+Munich Store,Munich,Bavaria,Germany,Europe,4200000000000.0,1400000000000.0
+London Store,London,England,UK,Europe,3100000000000.0,1033333333333.3334
+Manchester Store,Manchester,England,UK,Europe,3100000000000.0,1033333333333.3334
+Edinburgh Store,Edinburgh,Scotland,UK,Europe,3100000000000.0,1033333333333.3334
+Beijing Store,Beijing,Hebei,China,Asia,18000000000000.0,6000000000000.0
+Shanghai Store,Shanghai,Jiangsu,China,Asia,18000000000000.0,6000000000000.0
+Guangzhou Store,Guangzhou,Guangdong,China,Asia,18000000000000.0,6000000000000.0
+Sao Paulo Store,Sao Paulo,SP,Brazil,South America,1900000000000.0,950000000000.0
+Rio de Janeiro Store,Rio de Janeiro,RJ,Brazil,South America,1900000000000.0,950000000000.0
+Sydney Store,Sydney,NSW,Australia,Oceania,1600000000000.0,800000000000.0
+Melbourne Store,Melbourne,VIC,Australia,Oceania,1600000000000.0,800000000000.0
+Cape Town Store,Cape Town,Western Cape,South Africa,Africa,400000000000.0,200000000000.0
+Johannesburg Store,Johannesburg,Gauteng,South Africa,Africa,400000000000.0,200000000000.0
+Mumbai Store,Mumbai,Maharashtra,India,Asia,3400000000000.0,1700000000000.0
+Delhi Store,Delhi,Delhi,India,Asia,3400000000000.0,1700000000000.0
