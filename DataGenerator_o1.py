@@ -525,6 +525,8 @@ def main():
     total_stores = len(stores)
     print(f"Total stores: {total_stores}")
     print(f"Total sales records: {NUM_SALES_RECORDS}")
-    print("\ndata generation by DataGeneration-o1.py")
+
+
 if __name__ == "__main__":
     main()
+    print("\ndata generation by DataGeneration-o1.py")

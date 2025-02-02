@@ -1,0 +1,51 @@
+product_id,product_name,category_id,category,min_price,max_price,popularity
+1,Smartphone,1,Electronics,300,1000,1.11
+2,Laptop,1,Electronics,500,2000,0.79
+3,Tablet,1,Electronics,150,800,0.83
+4,Smartwatch,1,Electronics,100,400,2.71
+5,Headphones,1,Electronics,50,300,0.67
+6,T-Shirt,2,Clothing,10,50,1.28
+7,Jeans,2,Clothing,20,100,1.22
+8,Jacket,2,Clothing,30,200,1.42
+9,Dress,2,Clothing,20,150,0.92
+10,Sneakers,2,Clothing,30,150,1.75
+11,Refrigerator,3,Home Appliances,300,1500,1.43
+12,Microwave,3,Home Appliances,50,300,1.44
+13,Washing Machine,3,Home Appliances,200,1000,1.31
+14,Air Conditioner,3,Home Appliances,200,1200,1.25
+15,Vacuum Cleaner,3,Home Appliances,30,500,1.19
+16,Fiction Novel,4,Books,5,20,1.33
+17,Non-fiction,4,Books,10,30,1.48
+18,Children's Book,4,Books,5,15,0.54
+19,Textbook,4,Books,30,150,0.53
+20,Comic Book,4,Books,3,10,0.87
+21,Action Figure,5,Toys,10,50,1.0
+22,Puzzle,5,Toys,5,20,0.92
+23,Board Game,5,Toys,15,60,0.96
+24,Lego Set,5,Toys,20,100,2.53
+25,Doll,5,Toys,10,50,0.96
+26,Milk,6,Groceries,1,3,0.54
+27,Bread,6,Groceries,1,5,0.95
+28,Eggs,6,Groceries,2,6,2.35
+29,Cheese,6,Groceries,3,10,0.64
+30,Fruit Basket,6,Groceries,10,30,0.84
+31,Football,7,Sports,10,40,1.05
+32,Basketball,7,Sports,10,40,1.15
+33,Tennis Racket,7,Sports,30,200,0.8
+34,Yoga Mat,7,Sports,10,50,1.59
+35,Running Shoes,7,Sports,40,150,1.05
+36,Lipstick,8,Beauty,5,30,0.52
+37,Perfume,8,Beauty,20,100,1.43
+38,Skincare Set,8,Beauty,20,150,1.2
+39,Hair Dryer,8,Beauty,15,100,1.83
+40,Nail Polish,8,Beauty,3,15,1.09
+41,Sofa,9,Furniture,200,2000,0.85
+42,Dining Table,9,Furniture,150,1000,1.38
+43,Chair,9,Furniture,50,300,0.92
+44,Bed,9,Furniture,200,1500,0.55
+45,Desk,9,Furniture,100,600,0.77
+46,Car Tire,10,Automotive,50,200,0.92
+47,Engine Oil,10,Automotive,20,50,1.02
+48,Car Battery,10,Automotive,50,150,2.87
+49,Wiper Blades,10,Automotive,10,30,0.94
+50,Car Wax,10,Automotive,5,20,1.46
