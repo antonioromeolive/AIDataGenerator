@@ -3,7 +3,7 @@ import csv
 import os
 from datetime import datetime
 from collections import defaultdict
-import DataGenerator_deepSeek
+import Deepseek.DataGenerator_deepSeek as DataGenerator_deepSeek
 
 class TestSalesDataGenerator(unittest.TestCase):
     @classmethod

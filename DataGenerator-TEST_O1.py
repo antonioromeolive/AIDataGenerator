@@ -3,7 +3,7 @@ import os
 import csv
 import random
 from datetime import datetime
-from DataGenerator_o1 import generate_stores, expand_products_and_categories, seasonality_factor, main, CATEGORIES, NUM_SALES_RECORDS
+from OpenAI_o1.DataGenerator_o1 import generate_stores, expand_products_and_categories, seasonality_factor, main, CATEGORIES, NUM_SALES_RECORDS
 
 class TestDataGeneration(unittest.TestCase):
     @classmethod
@@ -16,7 +16,7 @@ class TestDataGeneration(unittest.TestCase):
         # Attempt to override
         # But be mindful that it might not do anything if the script references NUM_SALES_RECORDS directly.
         # We'll patch that variable.
-        import DataGenerator_o1
+        import OpenAI_o1.DataGenerator_o1 as DataGenerator_o1
         DataGenerator_o1.NUM_SALES_RECORDS = 2000  # smaller run
 
         # Remove old CSVs if they exist
@@ -30,7 +30,7 @@ class TestDataGeneration(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # Restore the original value
-        import DataGenerator_o1
+        import OpenAI_o1.DataGenerator_o1 as DataGenerator_o1
         DataGenerator_o1.NUM_SALES_RECORDS = cls.original_sales_records
 
     def test_generate_stores_function(self):
